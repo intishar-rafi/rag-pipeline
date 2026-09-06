@@ -294,8 +294,21 @@ def format_context(retrieved):
     ]
     return '\n'.join(lines)
 
-# Step 26 - truncate_context (not yet solved)
-# TODO: implement
+# Step 26 - truncate_context
+def truncate_context(context, max_chars):
+    # TODO: trim context so len(result) <= max_chars, preferring a whitespace boundary
+    if len(context) <= max_chars:
+        return context
+
+    truncated = context[:max_chars]
+
+    # If cutting mid-word (next char isn't whitespace/end), back off to the last space
+    if len(context) > max_chars and context[max_chars] not in (' ', '\t', '\n'):
+        cut = truncated.rfind(' ')
+        if cut != -1:
+            truncated = truncated[:cut]
+
+    return truncated
 
 # Step 27 - add_system_instruction (not yet solved)
 # TODO: implement
