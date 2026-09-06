@@ -323,7 +323,7 @@ def add_system_instruction(prompt):
 # Step 28 - load_generator
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-def load_generator(model_name='sshleifer/tiny-gpt2'):
+def load_generator(model_name='Qwen/Qwen2.5-0.5B-Instruct'):
     # TODO: load a small local causal LM and its tokenizer, ensuring tokenizer.pad_token is set.
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name)
