@@ -340,7 +340,12 @@ def generate_answer(model, tokenizer, prompt, max_new_tokens=32):
     # TODO: greedily generate text continuing `prompt`, return only the new text, decoded.
     torch.manual_seed(0)
 
-    inputs = tokenizer(prompt, return_tensors='pt')
+    messages = [{"role": "user", "content": prompt}]
+    chat_prompt = tokenizer.apply_chat_template(
+        messages, tokenize=False, add_generation_prompt=True
+    )
+
+    inputs = tokenizer(chat_prompt, return_tensors='pt')
     input_len = inputs['input_ids'].shape[1]
 
     output_ids = model.generate(
