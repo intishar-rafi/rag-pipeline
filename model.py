@@ -83,8 +83,30 @@ def chunk_by_tokens(text, tokenizer, max_tokens):
     ids = tokenizer.encode(text)
     return [tokenizer.decode(ids[i:i+max_tokens]) for i in range(0, len(ids), max_tokens)]
 
-# Step 8 - chunk_by_sentences (not yet solved)
-# TODO: implement
+# Step 8 - chunk_by_sentences
+import re
+
+def chunk_by_sentences(text, max_chars):
+    # TODO: split text on .!? boundaries and greedily pack whole sentences under max_chars.
+    if not text or not text.strip():
+        return []
+
+    sentences = re.findall(r'[^.!?]+[.!?]*', text.strip())
+    sentences = [s.strip() for s in sentences if s.strip()]
+
+    chunks = []
+    current = ''
+    for sentence in sentences:
+        if not current:
+            current = sentence
+        elif len(current) + 1 + len(sentence) <= max_chars:
+            current += ' ' + sentence
+        else:
+            chunks.append(current)
+            current = sentence
+    if current:
+        chunks.append(current)
+    return chunks
 
 # Step 9 - chunk_with_overlap (not yet solved)
 # TODO: implement
