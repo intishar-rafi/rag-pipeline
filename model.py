@@ -285,8 +285,14 @@ def build_prompt_template():
         "Answer:"
     )
 
-# Step 25 - format_context (not yet solved)
-# TODO: implement
+# Step 25 - format_context
+def format_context(retrieved):
+    # TODO: render each (chunk, score) as '[i] {text} (source={source})' and join with newlines
+    lines = [
+        f"[{i}] {chunk['text']} (source={chunk['source']})"
+        for i, (chunk, score) in enumerate(retrieved, start=1)
+    ]
+    return '\n'.join(lines)
 
 # Step 26 - truncate_context (not yet solved)
 # TODO: implement
