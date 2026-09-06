@@ -353,8 +353,21 @@ def generate_answer(model, tokenizer, prompt, max_new_tokens=32):
     new_tokens = output_ids[0][input_len:]
     return tokenizer.decode(new_tokens, skip_special_tokens=True)
 
-# Step 30 - rag_answer (not yet solved)
-# TODO: implement
+# Step 30 - rag_answer
+def rag_answer(query, chunks, embeddings, embed_model, generator, tokenizer, k=3):
+    # TODO: embed query, retrieve top-k chunks, build prompt, generate answer, return dict.
+    retrieved = retrieve(query, embed_model, embeddings, chunks, k)
+
+    context = format_context(retrieved)
+    template = build_prompt_template()
+    prompt = template.format(context=context, question=query)
+    prompt = add_system_instruction(prompt)
+
+    answer = generate_answer(generator, tokenizer, prompt)
+
+    sources = [chunk for chunk, score in retrieved]
+
+    return {'answer': answer, 'sources': sources, 'query': query}
 
 # Step 31 - track_source_chunk_ids (not yet solved)
 # TODO: implement
