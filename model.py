@@ -310,8 +310,15 @@ def truncate_context(context, max_chars):
 
     return truncated
 
-# Step 27 - add_system_instruction (not yet solved)
-# TODO: implement
+# Step 27 - add_system_instruction
+def add_system_instruction(prompt):
+    """Prepend a fixed system instruction to the prompt."""
+    # TODO: return a string that starts with a system instruction telling the model to use only the context
+    instruction = (
+        "You are a helpful assistant. Answer the question using ONLY the provided context. "
+        "If the answer is not in the context, say 'I do not know'."
+    )
+    return f"{instruction}\n\n{prompt}"
 
 # Step 28 - load_generator (not yet solved)
 # TODO: implement
