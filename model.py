@@ -141,8 +141,18 @@ def embed_text(model, text):
     # TODO: Return a 1D float32 numpy embedding vector for the given text string.
     return np.asarray(model.encode(text), dtype=np.float32)
 
-# Step 13 - embed_chunks (not yet solved)
-# TODO: implement
+# Step 13 - embed_chunks
+import numpy as np
+
+def embed_chunks(model, chunks, batch_size=32):
+    """Batch-embed a list of chunk strings or chunk dicts into a 2D float32 matrix."""
+    # TODO: normalize chunk inputs to strings, encode in batches, return (n, d) float32 array
+    if not chunks:
+        d = model.get_sentence_embedding_dimension()
+        return np.empty((0, d), dtype=np.float32)
+    texts = [c['text'] if isinstance(c, dict) else c for c in chunks]
+    embeddings = model.encode(texts, batch_size=batch_size)
+    return np.asarray(embeddings, dtype=np.float32)
 
 # Step 14 - l2_normalize (not yet solved)
 # TODO: implement
