@@ -184,8 +184,17 @@ def save_corpus(embeddings, chunks, directory):
 
     return {'embeddings': loaded_embeddings, 'chunks': loaded_chunks}
 
-# Step 16 - cosine_similarity_search (not yet solved)
-# TODO: implement
+# Step 16 - cosine_similarity_search
+import numpy as np
+
+def cosine_similarity_search(query_vector, chunk_matrix):
+    """Cosine similarity between query_vector (d,) and each row of chunk_matrix (n,d)."""
+    # TODO: compute cosine similarity between the query vector and every chunk row
+    q_norm = np.linalg.norm(query_vector)
+    q_norm = q_norm if q_norm != 0 else 1
+    row_norms = np.linalg.norm(chunk_matrix, axis=1)
+    row_norms = np.where(row_norms == 0, 1, row_norms)
+    return (chunk_matrix @ query_vector) / (row_norms * q_norm)
 
 # Step 17 - top_k_indices (not yet solved)
 # TODO: implement
