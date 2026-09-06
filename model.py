@@ -565,8 +565,18 @@ def build_eval_set():
         },
     ]
 
-# Step 42 - hit_rate_at_k (not yet solved)
-# TODO: implement
+# Step 42 - hit_rate_at_k
+def hit_rate_at_k(retrieved_ids_per_query, relevant_ids_per_query, k):
+    # TODO: return the fraction of queries with at least one relevant id in the top-k retrieved
+    if not retrieved_ids_per_query:
+        return 0.0
+
+    hits = 0
+    for retrieved, relevant in zip(retrieved_ids_per_query, relevant_ids_per_query):
+        if set(retrieved[:k]) & set(relevant):
+            hits += 1
+
+    return hits / len(retrieved_ids_per_query)
 
 # Step 43 - recall_at_k (not yet solved)
 # TODO: implement
