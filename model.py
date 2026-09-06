@@ -20,8 +20,41 @@ def load_text_directory(directory):
     files = sorted(f for f in os.listdir(directory) if f.endswith('.txt'))
     return [load_text_file(os.path.join(directory, f)) for f in files]
 
-# Step 3 - extract_text_from_html (not yet solved)
-# TODO: implement
+# Step 3 - extract_text_from_html
+import re
+from html.parser import HTMLParser
+
+class _TextExtractor(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+        self.skip_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag in ('script', 'style'):
+            self.skip_depth += 1
+
+    def handle_endtag(self, tag):
+        if tag in ('script', 'style') and self.skip_depth > 0:
+            self.skip_depth -= 1
+
+    def handle_data(self, data):
+        if self.skip_depth == 0:
+            self.parts.append(data)
+
+    def handle_entityref(self, name):
+        if self.skip_depth == 0:
+            self.parts.append(self.unescape(f'&{name};'))
+
+    def handle_charref(self, name):
+        if self.skip_depth == 0:
+            self.parts.append(self.unescape(f'&#{name};'))
+
+def extract_text_from_html(html):
+    # TODO: strip HTML tags and return only the visible text content
+    parser = _TextExtractor()
+    parser.feed(html)
+    return ''.join(parser.parts)
 
 # Step 4 - normalize_text (not yet solved)
 # TODO: implement
