@@ -529,8 +529,15 @@ def maximal_marginal_relevance(query_embedding, candidate_embeddings, k=5, lambd
 
     return selected
 
-# Step 40 - filter_by_metadata (not yet solved)
-# TODO: implement
+# Step 40 - filter_by_metadata
+def filter_by_metadata(chunks, filter_dict):
+    # TODO: return only chunks whose metadata contains every key/value pair in filter_dict
+    result = []
+    for chunk in chunks:
+        metadata = chunk.get('metadata', {})
+        if all(metadata.get(key) == value and key in metadata for key, value in filter_dict.items()):
+            result.append(chunk)
+    return result
 
 # Step 41 - build_eval_set (not yet solved)
 # TODO: implement
