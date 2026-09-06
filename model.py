@@ -154,8 +154,14 @@ def embed_chunks(model, chunks, batch_size=32):
     embeddings = model.encode(texts, batch_size=batch_size)
     return np.asarray(embeddings, dtype=np.float32)
 
-# Step 14 - l2_normalize (not yet solved)
-# TODO: implement
+# Step 14 - l2_normalize
+import numpy as np
+
+def l2_normalize(matrix):
+    # TODO: rescale each row of `matrix` to unit L2 norm, leaving all-zero rows unchanged.
+    norms = np.linalg.norm(matrix, axis=1, keepdims=True)
+    safe_norms = np.where(norms == 0, 1, norms)
+    return matrix / safe_norms
 
 # Step 15 - save_corpus (not yet solved)
 # TODO: implement
