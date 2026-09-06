@@ -65,8 +65,10 @@ def normalize_text(text):
     text = unicodedata.normalize('NFKC', text)
     return re.sub(r'\s+', ' ', text).strip()
 
-# Step 5 - make_document (not yet solved)
-# TODO: implement
+# Step 5 - make_document
+def make_document(text, source, title):
+    # TODO: wrap text with source and title metadata into a document dict.
+    return {'text': text, 'source': source, 'title': title}
 
 # Step 6 - chunk_fixed_size (not yet solved)
 # TODO: implement
