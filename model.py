@@ -405,8 +405,13 @@ def query_rewrite(raw_query):
     text = normalize_text(text)
     return text
 
-# Step 34 - hyde_retrieve (not yet solved)
-# TODO: implement
+# Step 34 - hyde_retrieve
+def hyde_retrieve(query, hypothetical_answer, chunks, embeddings, embed_model, k=5):
+    # TODO: embed the hypothetical answer and return the top-k chunks by cosine similarity.
+    hypo_vector = embed_text(embed_model, hypothetical_answer)
+    scores = cosine_similarity_search(hypo_vector, embeddings)
+    top = top_k_chunks(scores, chunks, k)
+    return [chunk for chunk, score in top]
 
 # Step 35 - reciprocal_rank_fusion (not yet solved)
 # TODO: implement
