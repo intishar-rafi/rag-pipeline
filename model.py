@@ -423,8 +423,42 @@ def reciprocal_rank_fusion(ranked_lists, k=60):
 
     return sorted(scores.items(), key=lambda item: item[1], reverse=True)
 
-# Step 36 - bm25_search (not yet solved)
-# TODO: implement
+# Step 36 - bm25_search
+import math
+
+def bm25_search(query, chunks, k=5, k1=1.5, b=0.75):
+    # TODO: score chunks against the query with BM25 and return top-k (index, score) pairs
+    def tokenize(text):
+        return text.lower().split()
+
+    query_terms = tokenize(query)
+    docs = [tokenize(c['text'] if isinstance(c, dict) else c) for c in chunks]
+    N = len(docs)
+    doc_lens = [len(d) for d in docs]
+    avgdl = sum(doc_lens) / N if N else 0
+
+    df = {}
+    for term in set(query_terms):
+        df[term] = sum(1 for doc in docs if term in doc)
+
+    scores = []
+    for idx, doc in enumerate(docs):
+        doc_len = doc_lens[idx]
+        score = 0.0
+        matched = False
+        for term in query_terms:
+            if term not in doc:
+                continue
+            matched = True
+            tf = doc.count(term)
+            idf = math.log((N - df[term] + 0.5) / (df[term] + 0.5) + 1)
+            denom = tf + k1 * (1 - b + b * doc_len / avgdl)
+            score += idf * (tf * (k1 + 1)) / denom
+        if matched:
+            scores.append((idx, score))
+
+    scores.sort(key=lambda x: x[1], reverse=True)
+    return scores[:k]
 
 # Step 37 - hybrid_search (not yet solved)
 # TODO: implement
