@@ -626,8 +626,24 @@ def faithfulness_score(answer, context_chunks):
     supported = sum(1 for token in answer_tokens if token in context_tokens)
     return supported / len(answer_tokens)
 
-# Step 46 - relevance_score (not yet solved)
-# TODO: implement
+# Step 46 - relevance_score
+import re
+
+def relevance_score(answer, question):
+    # TODO: return token-overlap (Jaccard) similarity between answer and question in [0, 1]
+    def tokenize(text):
+        text = normalize_text(text).lower()
+        text = re.sub(r'[^\w\s]', '', text)
+        return set(text.split())
+
+    answer_tokens = tokenize(answer)
+    question_tokens = tokenize(question)
+
+    union = answer_tokens | question_tokens
+    if not union:
+        return 0.0
+
+    return len(answer_tokens & question_tokens) / len(union)
 
 # Step 47 - handle_no_context (not yet solved)
 # TODO: implement
