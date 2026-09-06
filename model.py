@@ -703,6 +703,16 @@ def update_chat_memory(history, user_message, assistant_message):
         {'role': 'assistant', 'content': assistant_message},
     ]
 
-# Step 51 - rewrite_followup (not yet solved)
-# TODO: implement
+# Step 51 - rewrite_followup
+def rewrite_followup(followup_question, history):
+    # TODO: turn a follow-up question into a standalone query using chat history
+    last_user_message = None
+    for turn in history:
+        if turn['role'] == 'user':
+            last_user_message = turn['content']
+
+    if last_user_message is None:
+        return normalize_text(followup_question)
+
+    return normalize_text(f"{last_user_message} {followup_question}")
 
