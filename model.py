@@ -205,8 +205,13 @@ def top_k_indices(scores, k):
     k = min(k, len(scores))
     return np.argsort(-scores, kind='stable')[:k]
 
-# Step 18 - top_k_chunks (not yet solved)
-# TODO: implement
+# Step 18 - top_k_chunks
+import numpy as np
+
+def top_k_chunks(scores, chunks, k):
+    # TODO: return list of (chunk, score) tuples for the top-k scores, sorted descending
+    indices = top_k_indices(scores, k)
+    return [(chunks[i], float(scores[i])) for i in indices]
 
 # Step 19 - retrieve (not yet solved)
 # TODO: implement
