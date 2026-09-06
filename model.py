@@ -496,8 +496,38 @@ def rerank_cross_encoder(query, candidate_chunks, cross_encoder):
     ranked = sorted(zip(candidate_chunks, scores), key=lambda x: x[1], reverse=True)
     return [chunk for chunk, score in ranked]
 
-# Step 39 - maximal_marginal_relevance (not yet solved)
-# TODO: implement
+# Step 39 - maximal_marginal_relevance
+import numpy as np
+
+def maximal_marginal_relevance(query_embedding, candidate_embeddings, k=5, lambda_param=0.5):
+    # TODO: greedily pick indices balancing query relevance and diversity from already-selected items.
+    n = candidate_embeddings.shape[0]
+    k = min(k, n)
+
+    q_norm = np.linalg.norm(query_embedding)
+    q_norm = q_norm if q_norm != 0 else 1
+    relevance = candidate_embeddings @ query_embedding / q_norm
+
+    selected = []
+    remaining = list(range(n))
+
+    while len(selected) < k:
+        best_idx = None
+        best_score = None
+        for idx in remaining:
+            if selected:
+                sims_to_selected = candidate_embeddings[selected] @ candidate_embeddings[idx]
+                max_sim = np.max(sims_to_selected)
+            else:
+                max_sim = 0.0
+            mmr_score = lambda_param * relevance[idx] - (1 - lambda_param) * max_sim
+            if best_score is None or mmr_score > best_score or (mmr_score == best_score and idx < best_idx):
+                best_score = mmr_score
+                best_idx = idx
+        selected.append(best_idx)
+        remaining.remove(best_idx)
+
+    return selected
 
 # Step 40 - filter_by_metadata (not yet solved)
 # TODO: implement
