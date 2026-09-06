@@ -238,24 +238,33 @@ def faiss_search(index, query_vector, k):
     # TODO: query the FAISS index with the single query vector and return flat top-k arrays
     q = np.ascontiguousarray(np.asarray(query_vector, dtype=np.float32).reshape(1, -1))
 
-    n = index.ntotal
+    n = getattr(index, 'ntotal', None)
+    if n is None:
+        scores, ids = index.search(q, k)
+        return scores[0].astype(np.float32), ids[0].astype(np.int64)
+
     all_scores, all_ids = index.search(q, n)
     all_scores, all_ids = all_scores[0], all_ids[0]
 
-    # Restore ascending-index order among the full result (FAISS may already scramble ties)
     order_by_id = np.argsort(all_ids)
     all_scores, all_ids = all_scores[order_by_id], all_ids[order_by_id]
 
-    # Now stable-sort by score descending, ties broken by ascending index
     final_order = np.argsort(-all_scores, kind='stable')[:k]
 
     scores = all_scores[final_order].astype(np.float32)
     ids = all_ids[final_order].astype(np.int64)
     return scores, ids
-    return scores[order], ids[order]
 
-# Step 22 - compare_faiss_to_numpy (not yet solved)
-# TODO: implement
+# Step 22 - compare_faiss_to_numpy
+def compare_faiss_to_numpy(query_vector, chunk_matrix, index, k):
+    # TODO: return True iff FAISS and numpy cosine search agree on the top-k indices
+    numpy_scores = cosine_similarity_search(query_vector, chunk_matrix)
+    numpy_ids = set(top_k_indices(numpy_scores, k).tolist())
+
+    _, faiss_ids = faiss_search(index, query_vector, k)
+    faiss_ids = set(faiss_ids.tolist())
+
+    return numpy_ids == faiss_ids
 
 # Step 23 - save_faiss_index (not yet solved)
 # TODO: implement
