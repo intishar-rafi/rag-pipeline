@@ -266,8 +266,13 @@ def compare_faiss_to_numpy(query_vector, chunk_matrix, index, k):
 
     return numpy_ids == faiss_ids
 
-# Step 23 - save_faiss_index (not yet solved)
-# TODO: implement
+# Step 23 - save_faiss_index
+import faiss
+
+def save_faiss_index(index, path):
+    # TODO: persist the FAISS index to `path`, reload it, and return the reloaded index
+    faiss.write_index(index, path)
+    return faiss.read_index(path)
 
 # Step 24 - build_prompt_template (not yet solved)
 # TODO: implement
