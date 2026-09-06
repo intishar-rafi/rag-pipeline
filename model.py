@@ -659,8 +659,31 @@ def handle_no_context(scored_chunks, threshold=0.2):
 
     return {'abstain': False, 'message': ''}
 
-# Step 48 - deduplicate_chunks (not yet solved)
-# TODO: implement
+# Step 48 - deduplicate_chunks
+import numpy as np
+
+def deduplicate_chunks(chunks, embeddings, similarity_threshold=0.95):
+    """Drop near-duplicate chunks based on cosine similarity, keeping the first one."""
+    # TODO: keep each chunk only if it is not too similar to any already-kept chunk
+    if len(chunks) == 0:
+        return [], np.zeros((0, 0))
+
+    kept_indices = []
+
+    for i in range(len(chunks)):
+        is_duplicate = False
+        for j in kept_indices:
+            sim = np.dot(embeddings[i], embeddings[j])
+            if sim > similarity_threshold:
+                is_duplicate = True
+                break
+        if not is_duplicate:
+            kept_indices.append(i)
+
+    kept_chunks = [chunks[i] for i in kept_indices]
+    kept_embeddings = embeddings[kept_indices]
+
+    return kept_chunks, kept_embeddings
 
 # Step 49 - cache_query_embedding (not yet solved)
 # TODO: implement
