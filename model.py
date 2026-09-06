@@ -460,8 +460,32 @@ def bm25_search(query, chunks, k=5, k1=1.5, b=0.75):
     scores.sort(key=lambda x: x[1], reverse=True)
     return scores[:k]
 
-# Step 37 - hybrid_search (not yet solved)
-# TODO: implement
+# Step 37 - hybrid_search
+import numpy as np
+
+def hybrid_search(query, chunks, embeddings, embed_model, alpha=0.5, k=5):
+    # TODO: blend normalized dense cosine scores with BM25 scores and return the top-k (idx, score) pairs.
+    n = len(chunks)
+
+    query_vector = embed_text(embed_model, query)
+    dense_scores = cosine_similarity_search(query_vector, embeddings)
+
+    bm25_results = dict(bm25_search(query, chunks, k=n))
+    bm25_scores = np.array([bm25_results.get(i, 0.0) for i in range(n)])
+
+    def min_max(scores):
+        lo, hi = scores.min(), scores.max()
+        if hi - lo == 0:
+            return np.zeros_like(scores)
+        return (scores - lo) / (hi - lo)
+
+    dense_norm = min_max(np.asarray(dense_scores, dtype=float))
+    bm25_norm = min_max(bm25_scores)
+
+    combined = alpha * dense_norm + (1 - alpha) * bm25_norm
+
+    order = sorted(range(n), key=lambda i: (-combined[i], i))
+    return [(i, float(combined[i])) for i in order[:k]]
 
 # Step 38 - rerank_cross_encoder (not yet solved)
 # TODO: implement
