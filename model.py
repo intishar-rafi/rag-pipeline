@@ -594,8 +594,22 @@ def recall_at_k(retrieved_ids_per_query, relevant_ids_per_query, k):
 
     return sum(recalls) / len(recalls)
 
-# Step 44 - mean_reciprocal_rank (not yet solved)
-# TODO: implement
+# Step 44 - mean_reciprocal_rank
+def mean_reciprocal_rank(retrieved_ids_per_query, relevant_ids_per_query):
+    # TODO: average the reciprocal rank of the first relevant id across queries
+    if not retrieved_ids_per_query:
+        return 0.0
+
+    reciprocal_ranks = []
+    for retrieved, relevant in zip(retrieved_ids_per_query, relevant_ids_per_query):
+        rr = 0.0
+        for i, doc_id in enumerate(retrieved, start=1):
+            if doc_id in relevant:
+                rr = 1.0 / i
+                break
+        reciprocal_ranks.append(rr)
+
+    return sum(reciprocal_ranks) / len(reciprocal_ranks)
 
 # Step 45 - faithfulness_score (not yet solved)
 # TODO: implement
