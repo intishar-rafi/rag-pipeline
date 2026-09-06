@@ -611,8 +611,20 @@ def mean_reciprocal_rank(retrieved_ids_per_query, relevant_ids_per_query):
 
     return sum(reciprocal_ranks) / len(reciprocal_ranks)
 
-# Step 45 - faithfulness_score (not yet solved)
-# TODO: implement
+# Step 45 - faithfulness_score
+def faithfulness_score(answer, context_chunks):
+    # TODO: return the fraction of answer tokens that appear in the context text
+    answer_tokens = normalize_text(answer).lower().split()
+    if not answer_tokens:
+        return 0.0
+
+    context_text = ' '.join(
+        chunk['text'] if isinstance(chunk, dict) else chunk for chunk in context_chunks
+    )
+    context_tokens = set(normalize_text(context_text).lower().split())
+
+    supported = sum(1 for token in answer_tokens if token in context_tokens)
+    return supported / len(answer_tokens)
 
 # Step 46 - relevance_score (not yet solved)
 # TODO: implement
