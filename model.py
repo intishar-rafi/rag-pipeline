@@ -380,8 +380,30 @@ def append_source_references(answer_text, source_chunks):
     ids = track_source_chunk_ids(source_chunks)
     return f"{answer_text}\nSources: [{', '.join(ids)}]"
 
-# Step 33 - query_rewrite (not yet solved)
-# TODO: implement
+# Step 33 - query_rewrite
+import re
+
+def query_rewrite(raw_query):
+    # TODO: clean and normalize a raw user query into a better search query
+    text = normalize_text(raw_query).lower()
+
+    fillers = [
+        'please', 'could you', 'can you', 'tell me', 'i want to know'
+    ]
+
+    changed = True
+    while changed:
+        changed = False
+        for filler in fillers:
+            pattern = r'^' + re.escape(filler) + r'\b[\s,]*'
+            new_text = re.sub(pattern, '', text)
+            if new_text != text:
+                text = new_text.strip()
+                changed = True
+
+    text = text.rstrip('?.!')
+    text = normalize_text(text)
+    return text
 
 # Step 34 - hyde_retrieve (not yet solved)
 # TODO: implement
