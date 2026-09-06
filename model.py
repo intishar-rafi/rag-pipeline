@@ -163,8 +163,26 @@ def l2_normalize(matrix):
     safe_norms = np.where(norms == 0, 1, norms)
     return matrix / safe_norms
 
-# Step 15 - save_corpus (not yet solved)
-# TODO: implement
+# Step 15 - save_corpus
+import os
+import json
+import numpy as np
+
+def save_corpus(embeddings, chunks, directory):
+    # TODO: persist embeddings (.npy) and chunks (.json) into directory, then reload and return both.
+    os.makedirs(directory, exist_ok=True)
+    emb_path = os.path.join(directory, 'embeddings.npy')
+    chunks_path = os.path.join(directory, 'chunks.json')
+
+    np.save(emb_path, embeddings)
+    with open(chunks_path, 'w') as f:
+        json.dump(chunks, f)
+
+    loaded_embeddings = np.load(emb_path)
+    with open(chunks_path, 'r') as f:
+        loaded_chunks = json.load(f)
+
+    return {'embeddings': loaded_embeddings, 'chunks': loaded_chunks}
 
 # Step 16 - cosine_similarity_search (not yet solved)
 # TODO: implement
